@@ -1,0 +1,82 @@
+{
+  "Pepper___Bacterial_Spot": {
+    "name": "Bacterial Spot",
+    "crop": "Pepper",
+    "description": "Bacterial spot of pepper is caused by Xanthomonas campestris. It is one of the most devastating pepper diseases in warm, wet climates and affects leaves, stems, and fruits.",
+    "symptoms": ["Small, water-soaked spots on leaves that turn brown with yellow halos", "Lesions may merge causing large irregular dead areas", "Dark, raised, scabby lesions on fruit surface reducing marketability", "Severe defoliation in warm, rainy weather"],
+    "treatment": ["Apply copper-based bactericides preventively during wet weather", "Use certified disease-free transplants and seed", "Avoid overhead irrigation to reduce leaf wetness duration", "Remove and destroy infected plant debris", "Rotate crops for 2-3 years away from pepper and tomato"],
+    "severity": "High"
+  },
+  "Pepper___Healthy": {
+    "name": "Healthy Pepper",
+    "crop": "Pepper",
+    "description": "No disease detected. The pepper plant appears healthy with no visible symptoms of infection.",
+    "symptoms": ["No visible symptoms."],
+    "treatment": ["Continue standard agronomic practices", "Monitor regularly for early signs of disease or pest pressure", "Maintain optimal soil moisture, nutrition, and staking"],
+    "severity": "None"
+  },
+  "Potato___Early_Blight": {
+    "name": "Early Blight",
+    "crop": "Potato",
+    "description": "Early blight is caused by the fungus Alternaria solani. It is a common and widespread potato disease that affects foliage and tubers, especially in warm humid conditions.",
+    "symptoms": ["Dark brown circular lesions with concentric rings forming a target-board pattern", "Lesions surrounded by yellow chlorotic areas", "Lower, older leaves affected first; disease progresses upward", "Severe defoliation reduces tuber size and overall yield"],
+    "treatment": ["Apply fungicides (chlorothalonil, mancozeb, azoxystrobin) preventively", "Remove and destroy infected plant debris after harvest", "Use certified disease-free seed potatoes", "Maintain adequate plant nutrition to reduce stress-related susceptibility"],
+    "severity": "Medium"
+  },
+  "Potato___Healthy": {
+    "name": "Healthy Potato",
+    "crop": "Potato",
+    "description": "No disease detected. The potato plant appears healthy with no visible symptoms of infection.",
+    "symptoms": ["No visible symptoms."],
+    "treatment": ["Continue standard agronomic practices", "Monitor regularly for early signs of disease or pest pressure", "Maintain optimal soil moisture and nutrition"],
+    "severity": "None"
+  },
+  "Potato___Late_Blight": {
+    "name": "Late Blight",
+    "crop": "Potato",
+    "description": "Late blight is caused by the oomycete Phytophthora infestans and is the most destructive potato disease globally. It caused the Irish Famine in the 1840s and spreads extremely rapidly in cool, wet weather.",
+    "symptoms": ["Water-soaked, pale green lesions on leaves that rapidly turn brown to black", "White fuzzy sporulation on the underside of leaves in humid conditions", "Dark brown, greasy patches on stems that can girdle and kill the plant", "Tuber rot: reddish-brown granular internal tissue rot"],
+    "treatment": ["Apply protectant fungicides (mancozeb, chlorothalonil) before infection", "Use systemic fungicides (metalaxyl, cymoxanil) after early detection", "Plant certified late blight-resistant potato varieties", "Destroy all infected plant material and volunteer plants", "Avoid overhead irrigation — use drip irrigation if possible"],
+    "severity": "Critical"
+  },
+  "Tomato___Bacterial_Spot": {
+    "name": "Bacterial Spot",
+    "crop": "Tomato",
+    "description": "Bacterial spot is caused by Xanthomonas species. It affects leaves, stems, and fruits and is favored by warm, wet conditions. It is one of the most common and damaging tomato diseases worldwide.",
+    "symptoms": ["Small, water-soaked spots on leaves that enlarge and turn dark brown to black", "Lesions have yellow halos and irregular margins", "Dark, raised, scabby lesions on fruit surface", "Severe defoliation and fruit blemishes reduce marketability significantly"],
+    "treatment": ["Apply copper-based bactericides preventively during wet weather", "Use disease-free transplants and certified seed", "Avoid overhead irrigation to reduce leaf wetness duration", "Remove and destroy infected plant material", "Rotate crops — do not plant tomatoes in same location for 2-3 years"],
+    "severity": "Medium"
+  },
+  "Tomato___Early_Blight": {
+    "name": "Early Blight",
+    "crop": "Tomato",
+    "description": "Early blight of tomato is caused by Alternaria solani. It is one of the most common tomato diseases, causing significant defoliation and fruit loss if left unmanaged.",
+    "symptoms": ["Dark brown to black lesions with concentric rings (target-board pattern) on older leaves", "Yellow halo surrounding lesions", "Lesions start on lower leaves and progress upward", "Dark, sunken, leathery lesions may appear at the stem end of fruit"],
+    "treatment": ["Apply fungicides (chlorothalonil, mancozeb, azoxystrobin) at first sign of disease", "Remove and destroy infected lower leaves", "Avoid overhead irrigation; water at the base of plants", "Mulch around plants to prevent soil splash", "Maintain good plant nutrition — stressed plants are more susceptible"],
+    "severity": "Medium"
+  },
+  "Tomato___Healthy": {
+    "name": "Healthy Tomato",
+    "crop": "Tomato",
+    "description": "No disease detected. The tomato plant appears healthy with no visible symptoms of infection.",
+    "symptoms": ["No visible symptoms."],
+    "treatment": ["Continue standard agronomic practices", "Monitor regularly for early signs of disease or pest pressure", "Maintain proper staking, pruning, and irrigation"],
+    "severity": "None"
+  },
+  "Tomato___Late_Blight": {
+    "name": "Late Blight",
+    "crop": "Tomato",
+    "description": "Tomato late blight is caused by Phytophthora infestans, the same pathogen responsible for potato late blight. It spreads with alarming speed in cool, wet weather and can destroy entire crops within days.",
+    "symptoms": ["Irregular, water-soaked, pale green lesions on leaves rapidly turning brown", "White cottony sporulation on leaf undersides during humid conditions", "Brown, greasy patches on stems that can girdle and kill the plant", "Firm, brown, greasy rot on green or ripe fruits"],
+    "treatment": ["Apply protectant fungicides (copper hydroxide, mancozeb) preventively", "Use systemic fungicides (fluopicolide, cymoxanil) after early detection", "Remove and destroy all infected plant tissue immediately", "Avoid overhead irrigation and working in fields when plants are wet", "Plant resistant varieties where available"],
+    "severity": "Critical"
+  },
+  "Tomato___Yellow_Leaf_Curl_Virus": {
+    "name": "Yellow Leaf Curl Virus",
+    "crop": "Tomato",
+    "description": "Tomato Yellow Leaf Curl Virus (TYLCV) is a begomovirus transmitted by the silverleaf whitefly (Bemisia tabaci). It is one of the most damaging tomato viruses worldwide, causing massive yield losses in tropical and subtropical regions.",
+    "symptoms": ["Upward curling and yellowing of leaflet margins (cupping)", "Severe stunting of new growth — young leaves are small and crinkled", "Interveinal chlorosis giving leaves a mottled yellow-green appearance", "Flowers drop before fruit set, causing near-total yield loss in severe cases"],
+    "treatment": ["Control whitefly populations with insecticides (imidacloprid, thiamethoxam) or reflective mulches", "Use TYLCV-resistant or tolerant tomato varieties as primary management", "Remove and destroy infected plants immediately to reduce virus spread", "Use fine mesh insect nets in seedling nurseries to prevent whitefly access", "There is no cure once a plant is infected — prevention and vector control are critical"],
+    "severity": "Critical"
+  }
+}

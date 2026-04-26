@@ -1,0 +1,23 @@
+# Model files — too large for GitHub, upload separately
+models/*.h5
+
+# Dataset — never commit this
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+pest_env/
+venv/
+.env
+
+# Uploads folder (runtime only)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Training artifacts
+training_log.csv
+*.bak
+models/*.h5 
+models/*.keras 
