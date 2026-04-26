@@ -1,70 +1,170 @@
-# CropGuard AI — Setup Guide
+# 🌿 CropGuard AI — Crop Disease Detection System
 
-## Model Info
-
-Your `resnet.h5` is a **ResNet50V2** trained on a **10-class PlantVillage subset**:
-
-| # | Class Label                  | Crop   | Disease              |
-|---|------------------------------|--------|----------------------|
-| 0 | Corn___Common_Rust           | Corn   | Common Rust          |
-| 1 | Corn___Gray_Leaf_Spot        | Corn   | Gray Leaf Spot       |
-| 2 | Corn___Healthy               | Corn   | Healthy              |
-| 3 | Corn___Northern_Leaf_Blight  | Corn   | Northern Leaf Blight |
-| 4 | Potato___Early_Blight        | Potato | Early Blight         |
-| 5 | Potato___Healthy             | Potato | Healthy              |
-| 6 | Potato___Late_Blight         | Potato | Late Blight          |
-| 7 | Tomato___Bacterial_Spot      | Tomato | Bacterial Spot       |
-| 8 | Tomato___Healthy             | Tomato | Healthy              |
-| 9 | Tomato___Late_Blight         | Tomato | Late Blight          |
+CropGuard AI is a deep learning–powered web application that detects plant diseases from leaf images and provides actionable insights such as disease name, confidence score, severity, and treatment suggestions.
 
 ---
 
-## Quick Start
+## 🚀 Live Demo
 
-### 1. Install dependencies
-```bash
-pip install -r requirements.txt
-```
+👉 **Try it here:**
+https://cropguard-ai-80cp.onrender.com
 
-### 2. Place your model
-Put `resnet.h5` in the **same folder as app.py** (or in a `models/` subfolder):
+---
+
+## 🚀 Features
+
+* 🔍 **AI-based Disease Detection** using ResNet50V2
+* 🖼️ **Image Upload Interface** (drag & drop + preview)
+* 📊 **Confidence Score Visualization**
+* 🌱 **Disease Metadata Display** (symptoms, severity, treatment)
+* ⚡ **Real-time Predictions via Flask API**
+* 🎯 Designed for **agriculture support & early disease diagnosis**
+
+---
+
+## 🧠 Model Details
+
+* **Architecture:** ResNet50V2
+* **Dataset:** PlantVillage (10-class subset)
+* **Input Size:** 224 × 224 × 3
+* **Output:** Softmax (10 classes)
+
+### 📋 Classes
+
+| # | Class Label                 | Crop   | Disease              |
+| - | --------------------------- | ------ | -------------------- |
+| 0 | Corn___Common_Rust          | Corn   | Common Rust          |
+| 1 | Corn___Gray_Leaf_Spot       | Corn   | Gray Leaf Spot       |
+| 2 | Corn___Healthy              | Corn   | Healthy              |
+| 3 | Corn___Northern_Leaf_Blight | Corn   | Northern Leaf Blight |
+| 4 | Potato___Early_Blight       | Potato | Early Blight         |
+| 5 | Potato___Healthy            | Potato | Healthy              |
+| 6 | Potato___Late_Blight        | Potato | Late Blight          |
+| 7 | Tomato___Bacterial_Spot     | Tomato | Bacterial Spot       |
+| 8 | Tomato___Healthy            | Tomato | Healthy              |
+| 9 | Tomato___Late_Blight        | Tomato | Late Blight          |
+
+---
+
+## 🛠️ Tech Stack
+
+* **Backend:** Flask (Python)
+* **ML Framework:** TensorFlow / Keras
+* **Image Processing:** OpenCV, Pillow
+* **Frontend:** HTML, CSS, JavaScript
+* **Model:** ResNet50V2
+
+---
+
+## 📁 Project Structure
+
 ```
 cropguard/
 ├── app.py
 ├── predict_pipeline.py
-├── class_names.json        ← auto-generated, matches your 10-class model
-├── disease_info.json       ← auto-generated, full metadata for all 10 classes
+├── class_names.json
+├── disease_info.json
 ├── requirements.txt
-├── resnet.h5               ← place your model here  ✅
-└── static/
-    └── uploads/
+├── resnet.h5
+├── static/
+│   └── uploads/
+└── templates/
 ```
 
-### 3. Run
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/cropguard-ai.git
+cd cropguard-ai
+```
+
+---
+
+### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 3. Add Model File
+
+Place your trained model:
+
+```
+resnet.h5
+```
+
+Inside project root (or `/models/` folder).
+
+---
+
+### 4. Run Application
+
 ```bash
 python app.py
 ```
-Visit http://localhost:5000
+
+Open in browser:
+
+```
+http://127.0.0.1:5000
+```
 
 ---
 
-## What was fixed
+## 🧪 How It Works
 
-| Bug | Fix |
-|-----|-----|
-| `class_names.json` missing | Generated for your exact 10 classes |
-| `disease_info.json` missing | Generated with full disease metadata |
-| Wrong model path — looked in `models/` only | Now checks root folder first, then `models/` |
-| `import tensorflow` at top of app.py — crashed if TF not installed | Made lazy (only imported when loading model) |
-| Both models referenced everywhere even after removing MobileNet | Cleaned to ResNet-only throughout |
-| `load_models()` fallback used MobileNetV2 architecture for ResNet | Removed wrong fallback |
-| Demo mode message still said mobilenet/resnet | Updated to ResNet-only message |
+1. User uploads leaf image
+2. Image is preprocessed (resize, normalize)
+3. Model performs inference
+4. Top prediction is selected
+5. Metadata is fetched (symptoms, treatment, severity)
+6. Results are displayed in UI
 
 ---
 
-## Expanding to more classes later
+## 📊 Example Output
 
-If you retrain your model with more PlantVillage classes (e.g. all 38):
-1. Update `class_names.json` — add new class label strings in the exact training order
-2. Update `disease_info.json` — add metadata entries for the new classes
-3. The rest of the code adjusts automatically via `NUM_CLASSES = len(CLASS_NAMES)`
+* **Prediction:** Tomato – Late Blight
+* **Confidence:** 92.4%
+* **Severity:** High
+* **Treatment:** Apply fungicide and remove infected leaves
+
+---
+
+## ⚠️ Notes
+
+* Model is trained on **controlled PlantVillage dataset**
+* Real-world accuracy may vary due to:
+
+  * Lighting conditions
+  * Background noise
+  * Image quality
+
+---
+
+## 🔮 Future Improvements
+
+* Expand to full **38-class PlantVillage dataset**
+* Add **real-world dataset fine-tuning**
+* Deploy model via cloud storage (Drive/S3)
+* Mobile app integration
+* Ensemble learning for better accuracy
+
+---
+
+## 👩‍💻 Author
+
+**Priyanshi Agarwal**
+
+---
+
+## 📌 License
+
+This project is for educational and research purposes.
