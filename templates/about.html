@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}CropGuard AI — About the Project{% endblock %}
+
+{% block content %}
+
+<div class="page-hero-sm">
+  <div class="page-hero-sm-inner">
+    <div class="section-label"><i class="fa-solid fa-circle-info"></i> About</div>
+    <h1 class="page-hero-h1">Built for the Field</h1>
+    <p class="page-hero-body">An open-source AI system that puts agricultural intelligence in every farmer's pocket.</p>
+  </div>
+</div>
+
+<div class="about-layout">
+
+  <!-- Overview + Mission -->
+  <div class="about-hero-row">
+    <div class="about-hero-text animate-up">
+      <h2>What is CropGuard AI?</h2>
+      <p>CropGuard AI is a deep-learning web application that uses an ensemble of <strong>MobileNetV2</strong> and <strong>ResNet50V2</strong> convolutional neural networks trained on the <strong>PlantVillage dataset</strong> (54,306 images) to detect <strong>{{ disease_count }} plant conditions</strong> across 5 major crops.</p>
+      <p>Early disease detection can reduce crop losses by up to <strong>40%</strong> and minimize pesticide overuse — helping farmers make faster, smarter, data-driven decisions.</p>
+    </div>
+    <div class="about-mission-card animate-up" style="animation-delay:.1s">
+      <div class="mission-icon"><i class="fa-solid fa-bullseye"></i></div>
+      <h3>Our Mission</h3>
+      <p>Democratize precision agriculture. Make expert-level crop diagnostics accessible to every farmer — regardless of location or resources.</p>
+      <div class="mission-stats">
+        <div><strong>{{ disease_count }}</strong><span>Classes</span></div>
+        <div><strong>5</strong><span>Crops</span></div>
+        <div><strong>2</strong><span>Models</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Model Status -->
+  <div class="about-section animate-up">
+    <div class="section-label"><i class="fa-solid fa-microchip"></i> Runtime</div>
+    <h2 class="about-section-title">Model Status</h2>
+    <div class="model-grid">
+      <div class="model-card {% if model_status.mobilenet.loaded %}model-ok{% elif model_status.mobilenet.file_exists %}model-warn{% else %}model-off{% endif %}">
+        <div class="model-card-top">
+          <div class="model-icon">
+            {% if model_status.mobilenet.loaded %}<i class="fa-solid fa-circle-check"></i>
+            {% elif model_status.mobilenet.file_exists %}<i class="fa-solid fa-clock"></i>
+            {% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}
+          </div>
+          <div>
+            <div class="model-name">MobileNetV2</div>
+            <div class="model-state-text">
+              {% if model_status.mobilenet.loaded %}Loaded &amp; Active
+              {% elif model_status.mobilenet.file_exists %}File found — not loaded
+              {% else %}Model file missing{% endif %}
+            </div>
+          </div>
+          <div class="model-status-badge {% if model_status.mobilenet.loaded %}badge-ok{% elif model_status.mobilenet.file_exists %}badge-warn{% else %}badge-off{% endif %}">
+            {% if model_status.mobilenet.loaded %}Ready{% elif model_status.mobilenet.file_exists %}Pending{% else %}Missing{% endif %}
+          </div>
+        </div>
+        <code class="model-path">{{ model_status.mobilenet.path }}</code>
+      </div>
+
+      <div class="model-card {% if model_status.resnet.loaded %}model-ok{% elif model_status.resnet.file_exists %}model-warn{% else %}model-off{% endif %}">
+        <div class="model-card-top">
+          <div class="model-icon">
+            {% if model_status.resnet.loaded %}<i class="fa-solid fa-circle-check"></i>
+            {% elif model_status.resnet.file_exists %}<i class="fa-solid fa-clock"></i>
+            {% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}
+          </div>
+          <div>
+            <div class="model-name">ResNet50V2</div>
+            <div class="model-state-text">
+              {% if model_status.resnet.loaded %}Loaded &amp; Active
+              {% elif model_status.resnet.file_exists %}File found — not loaded
+              {% else %}Model file missing{% endif %}
+            </div>
+          </div>
+          <div class="model-status-badge {% if model_status.resnet.loaded %}badge-ok{% elif model_status.resnet.file_exists %}badge-warn{% else %}badge-off{% endif %}">
+            {% if model_status.resnet.loaded %}Ready{% elif model_status.resnet.file_exists %}Pending{% else %}Missing{% endif %}
+          </div>
+        </div>
+        <code class="model-path">{{ model_status.resnet.path }}</code>
+      </div>
+    </div>
+
+    <div class="setup-guide">
+      <div class="setup-guide-title"><i class="fa-solid fa-rocket"></i> Enable Real Predictions</div>
+      <ol class="setup-steps">
+        <li><strong>Train or download</strong> your Keras models with output shape <code>(None, {{ disease_count }})</code></li>
+        <li><strong>Place them</strong> in the <code>models/</code> directory as <code>mobilenet.h5</code> and <code>resnet.h5</code></li>
+        <li><strong>Restart</strong> the Flask server — models are loaded automatically on startup</li>
+      </ol>
+      <div class="setup-code">
+<pre>models/
+  mobilenet.h5   ← MobileNetV2 trained model
+  resnet.h5      ← ResNet50V2 trained model</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technical Specs -->
+  <div class="about-section animate-up">
+    <div class="section-label"><i class="fa-solid fa-flask"></i> Architecture</div>
+    <h2 class="about-section-title">Technical Specifications</h2>
+    <div class="tech-grid">
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-brands fa-python"></i> Framework</div>
+        <div class="tech-val">Flask + TensorFlow / Keras</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-solid fa-brain"></i> Models</div>
+        <div class="tech-val">MobileNetV2 &amp; ResNet50V2</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-solid fa-expand"></i> Input Size</div>
+        <div class="tech-val">224 × 224 px (RGB)</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-solid fa-sliders"></i> Normalization</div>
+        <div class="tech-val">Pixel ÷ 255.0 → range [0, 1]</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-solid fa-layer-group"></i> Inference</div>
+        <div class="tech-val">Ensemble probability average</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-solid fa-database"></i> Dataset</div>
+        <div class="tech-val">PlantVillage (54,306 images)</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-solid fa-tags"></i> Classes</div>
+        <div class="tech-val">{{ disease_count }} (including healthy states)</div>
+      </div>
+      <div class="tech-row">
+        <div class="tech-key"><i class="fa-solid fa-plug"></i> API Endpoint</div>
+        <div class="tech-val"><code>POST /api/predict</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Classes -->
+  <div class="about-section animate-up">
+    <div class="section-label"><i class="fa-solid fa-list-check"></i> Coverage</div>
+    <h2 class="about-section-title">All {{ disease_count }} Supported Classes</h2>
+    <div class="class-cloud">
+      {% for cls in class_names %}
+      <div class="class-chip {% if 'healthy' in cls %}chip-healthy{% endif %}">
+        {% if 'healthy' in cls %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-virus"></i>{% endif %}
+        {{ cls.replace('___', ' — ').replace('_', ' ') }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- API Docs -->
+  <div class="about-section animate-up">
+    <div class="section-label"><i class="fa-solid fa-plug"></i> Integration</div>
+    <h2 class="about-section-title">REST API</h2>
+    <p class="api-intro">Integrate CropGuard predictions into your own application with a single HTTP request.</p>
+
+    <div class="api-doc-card">
+      <div class="api-endpoint-bar">
+        <span class="api-method">POST</span>
+        <span class="api-path">/api/predict</span>
+        <span class="api-tag">multipart/form-data</span>
+      </div>
+      <div class="api-blocks">
+        <div class="api-block">
+          <div class="api-block-title">Request (cURL)</div>
+          <pre>curl -X POST http://localhost:5000/api/predict \
+  -F "image=@path/to/leaf.jpg"</pre>
+        </div>
+        <div class="api-block">
+          <div class="api-block-title">Response (JSON)</div>
+          <pre>{
+  "disease":    "Tomato Early Blight",
+  "crop":       "Tomato",
+  "confidence": 87.43,
+  "severity":   "Medium",
+  "symptoms":   "Dark spots with concentric rings…",
+  "treatment":  ["Apply chlorothalonil…", "…"],
+  "top3":       [{"name": "…", "confidence": 87.43}, …],
+  "model_used": "MobileNetV2 + ResNet50V2 Ensemble"
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}CropGuard AI — Detect Disease{% endblock %}
+
+{% block content %}
+
+<div class="page-hero-sm">
+  <div class="page-hero-sm-inner">
+    <div class="section-label"><i class="fa-solid fa-microscope"></i> Disease Detection</div>
+    <h1 class="page-hero-h1">Upload &amp; Diagnose</h1>
+    <p class="page-hero-body">Drag a leaf image onto the canvas below — our AI ensemble will analyse it in seconds.</p>
+  </div>
+</div>
+
+<div class="detect-wrap">
+
+  <!-- ── Left: Upload Panel ─────────────────── -->
+  <div class="upload-col">
+
+    {% if error %}
+    <div class="alert-error-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <div class="upload-card">
+      <div class="upload-card-header">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <h2>Upload Leaf Image</h2>
+      </div>
+
+      <form action="{{ url_for('detect') }}" method="POST" enctype="multipart/form-data" id="detect-form">
+        <div class="drop-zone" id="drop-zone">
+          <div class="scan-overlay" id="scan-overlay"></div>
+          <div class="dz-inner" id="dz-inner">
+            <div class="dz-icon-ring">
+              <i class="fa-solid fa-leaf dz-icon"></i>
+            </div>
+            <p class="dz-title">Drop your leaf image here</p>
+            <p class="dz-sub">or <span class="dz-link">click to browse</span></p>
+            <div class="dz-formats">
+              <span>JPG</span><span>PNG</span><span>WEBP</span>
+              <span class="dz-size">· max 16 MB</span>
+            </div>
+          </div>
+          <img id="preview-img" src="" alt="Preview" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:inherit;">
+          <input type="file" name="image" id="image-input" accept=".jpg,.jpeg,.png,.webp" required style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+        </div>
+
+        <div class="upload-actions">
+          <button type="submit" class="btn-analyze" id="submit-btn">
+            <span class="btn-text">
+              <i class="fa-solid fa-brain"></i> Analyse Leaf
+            </span>
+            <span class="btn-loading" style="display:none;">
+              <i class="fa-solid fa-spinner fa-spin"></i> Analysing…
+            </span>
+          </button>
+          <button type="button" class="btn-clear" id="clear-btn">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="tips-card">
+      <div class="tips-header"><i class="fa-solid fa-lightbulb"></i> Tips for Best Results</div>
+      <ul class="tips-list">
+        <li><i class="fa-solid fa-check"></i> Good natural or diffused lighting</li>
+        <li><i class="fa-solid fa-check"></i> Fill the frame with a single leaf</li>
+        <li><i class="fa-solid fa-check"></i> Include the symptomatic area clearly</li>
+        <li><i class="fa-solid fa-check"></i> Avoid motion blur or deep shadows</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ── Right: Results Panel ───────────────── -->
+  <div class="result-col">
+
+    {% if result %}
+
+      {% if result.demo_mode %}
+      <div class="demo-banner">
+        <i class="fa-solid fa-flask-vial"></i>
+        <div>
+          <strong>Demo Mode Active</strong>
+          <p>No trained models found in <code>/models/</code>. Add <code>mobilenet.h5</code> and <code>resnet.h5</code> for real AI predictions.</p>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if result.uncertain %}
+      <div class="alert-warn-box">
+        <i class="fa-solid fa-circle-question"></i>
+        <div>
+          <strong>Low Confidence Result</strong>
+          <p>The model's confidence is below 30%. The image may not contain a recognisable leaf, or the quality may be too low. Please try a clearer image.</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- ── Main Result Card ── -->
+      <div class="result-hero-card sev-border-{{ result.severity|lower }}">
+        <div class="rhc-glow rhc-glow-{{ result.severity|lower }}"></div>
+
+        <div class="rhc-top">
+          <div class="rhc-icon-wrap sev-bg-{{ result.severity|lower }}">
+            {% if result.severity == 'None' %}<i class="fa-solid fa-circle-check"></i>
+            {% elif result.severity == 'Critical' or result.severity == 'Uncertain' %}<i class="fa-solid fa-circle-radiation"></i>
+            {% elif result.severity == 'High' %}<i class="fa-solid fa-triangle-exclamation"></i>
+            {% else %}<i class="fa-solid fa-circle-exclamation"></i>{% endif %}
+          </div>
+          <div class="rhc-meta">
+            <h2 class="rhc-disease">{{ result.disease }}</h2>
+            <div class="rhc-tags">
+              <span class="tag-crop"><i class="fa-solid fa-seedling"></i> {{ result.crop }}</span>
+              <span class="tag-sev tag-sev-{{ result.severity|lower }}">
+                {% if result.severity == 'None' %}Healthy
+                {% elif result.severity == 'Uncertain' %}Uncertain
+                {% else %}{{ result.severity }} Severity{% endif %}
+              </span>
+            </div>
+          </div>
+          <img src="{{ result.image_url }}" alt="Uploaded leaf" class="rhc-thumb">
+        </div>
+
+        <!-- Confidence bar -->
+        <div class="conf-block">
+          <div class="conf-row">
+            <span class="conf-label"><i class="fa-solid fa-gauge-high"></i> Confidence Score</span>
+            <span class="conf-pct conf-pct-{{ result.conf_level }}">{{ result.confidence }}%</span>
+          </div>
+          <div class="conf-track">
+            <div class="conf-fill conf-fill-{{ result.conf_level }}"
+                 id="main-conf-bar"
+                 style="width:0%"
+                 data-target="{{ result.confidence }}"></div>
+          </div>
+          <div class="conf-model"><i class="fa-solid fa-microchip"></i> {{ result.model_used }}</div>
+        </div>
+      </div>
+
+      <!-- ── Info Grid ── -->
+      <div class="result-info-grid">
+
+        <div class="result-info-card">
+          <div class="ric-header"><i class="fa-solid fa-file-lines"></i> Description</div>
+          <p>{{ result.description }}</p>
+        </div>
+
+        <div class="result-info-card">
+          <div class="ric-header"><i class="fa-solid fa-magnifying-glass"></i> Symptoms</div>
+          {% if result.symptoms is string %}
+            <p>{{ result.symptoms }}</p>
+          {% else %}
+            <ul class="symptoms-list">
+              {% for sym in result.symptoms %}
+              <li><i class="fa-solid fa-chevron-right"></i> {{ sym }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <!-- ── Treatment ── -->
+      {% if not result.is_healthy %}
+      <div class="treatment-card-full">
+        <div class="tcf-header">
+          <i class="fa-solid fa-syringe"></i>
+          <h3>Recommended Treatment Protocol</h3>
+        </div>
+        <ol class="tcf-list">
+          {% for step in result.treatment %}
+          <li>
+            <div class="tcf-step-num">{{ loop.index }}</div>
+            <span>{{ step }}</span>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
+      {% else %}
+      <div class="treatment-card-full treatment-card-healthy">
+        <div class="tcf-header">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h3>Maintenance Recommendations</h3>
+        </div>
+        <ol class="tcf-list">
+          {% for step in result.treatment %}
+          <li>
+            <div class="tcf-step-num tcf-step-healthy">{{ loop.index }}</div>
+            <span>{{ step }}</span>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
+      {% endif %}
+
+      <!-- ── Top 3 ── -->
+      <div class="top3-card">
+        <div class="top3-header"><i class="fa-solid fa-ranking-star"></i> Model Confidence — Top 3 Predictions</div>
+        {% for pred in result.top3 %}
+        <div class="t3-row {% if loop.first %}t3-first{% endif %}">
+          <div class="t3-rank {% if loop.first %}t3-rank-first{% endif %}">{{ loop.index }}</div>
+          <div class="t3-body">
+            <div class="t3-name">{{ pred.name }} <span class="t3-crop">· {{ pred.crop }}</span></div>
+            <div class="t3-track">
+              <div class="t3-fill {% if loop.first %}t3-fill-top{% endif %}"
+                   data-target="{{ pred.confidence }}"
+                   style="width:0%"></div>
+            </div>
+          </div>
+          <div class="t3-score">{{ pred.confidence }}%</div>
+        </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+    <!-- ── Empty State ── -->
+    <div class="empty-state-card">
+      <div class="es-icon"><i class="fa-solid fa-microscope"></i></div>
+      <h3>Awaiting Analysis</h3>
+      <p>Upload a plant leaf image on the left to see the AI diagnosis appear here.</p>
+      <div class="es-hints">
+        <div class="es-hint"><i class="fa-solid fa-leaf"></i> Disease identification</div>
+        <div class="es-hint"><i class="fa-solid fa-chart-bar"></i> Confidence scores</div>
+        <div class="es-hint"><i class="fa-solid fa-notes-medical"></i> Treatment plan</div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/detect.js') }}"></script>
+{% endblock %}

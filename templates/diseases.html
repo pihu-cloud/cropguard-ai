@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}CropGuard AI — Disease Library{% endblock %}
+
+{% block content %}
+
+<div class="page-hero-sm">
+  <div class="page-hero-sm-inner">
+    <div class="section-label"><i class="fa-solid fa-book-open"></i> Disease Library</div>
+    <h1 class="page-hero-h1">{{ diseases|length }} Plant Conditions</h1>
+    <p class="page-hero-body">Browse every detectable disease, symptom, and treatment protocol in our database.</p>
+  </div>
+</div>
+
+<!-- Search + Filter Bar -->
+<div class="lib-controls">
+  <div class="search-wrap">
+    <i class="fa-solid fa-magnifying-glass search-ico"></i>
+    <input type="text" id="disease-search" placeholder="Search disease, crop, or symptom…" class="search-input">
+  </div>
+  <div class="filter-group">
+    <a href="{{ url_for('diseases') }}"
+       class="filter-btn {% if selected_crop == 'all' %}filter-btn--active{% endif %}">
+      <i class="fa-solid fa-border-all"></i> All
+    </a>
+    {% for crop in crops %}
+    <a href="{{ url_for('diseases', crop=crop) }}"
+       class="filter-btn {% if selected_crop == crop %}filter-btn--active{% endif %}">
+      {% if crop == 'Apple' %}<i class="fa-solid fa-apple-whole"></i>
+      {% elif 'Corn' in crop %}<i class="fa-solid fa-wheat-awn"></i>
+      {% elif crop == 'Grape' %}<i class="fa-solid fa-wine-glass"></i>
+      {% elif crop == 'Potato' %}<i class="fa-solid fa-circle"></i>
+      {% elif crop == 'Tomato' %}<i class="fa-solid fa-circle-dot"></i>
+      {% else %}<i class="fa-solid fa-leaf"></i>{% endif %}
+      {{ crop }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Severity Legend -->
+<div class="sev-legend">
+  <span class="legend-label">Severity:</span>
+  <span class="leg-item leg-none"><i class="fa-solid fa-circle-check"></i> Healthy</span>
+  <span class="leg-item leg-med"><i class="fa-solid fa-circle-exclamation"></i> Medium</span>
+  <span class="leg-item leg-high"><i class="fa-solid fa-triangle-exclamation"></i> High</span>
+  <span class="leg-item leg-crit"><i class="fa-solid fa-circle-radiation"></i> Critical</span>
+</div>
+
+<!-- Disease Grid -->
+<div class="disease-grid" id="disease-grid">
+  {% for key, disease in diseases.items() %}
+  <div class="dcard animate-up" data-search="{{ disease.name|lower }} {{ disease.crop|lower }} {{ disease.symptoms|lower }}">
+
+    <div class="dcard-head sev-head-{{ disease.severity|lower }}">
+      <div class="dcard-sev-icon">
+        {% if disease.severity == 'None' %}<i class="fa-solid fa-circle-check"></i>
+        {% elif disease.severity == 'Critical' %}<i class="fa-solid fa-circle-radiation"></i>
+        {% elif disease.severity == 'High' %}<i class="fa-solid fa-triangle-exclamation"></i>
+        {% else %}<i class="fa-solid fa-circle-exclamation"></i>{% endif %}
+      </div>
+      <div class="dcard-head-info">
+        <h3 class="dcard-name">{{ disease.name }}</h3>
+        <span class="dcard-crop"><i class="fa-solid fa-seedling"></i> {{ disease.crop }}</span>
+      </div>
+      <span class="dcard-badge sev-badge-{{ disease.severity|lower }}">{{ disease.severity }}</span>
+    </div>
+
+    <div class="dcard-body">
+      <p class="dcard-desc">{{ disease.description }}</p>
+
+      <div class="dcard-section">
+        <div class="dcard-section-title"><i class="fa-solid fa-eye"></i> Symptoms</div>
+        <p>{{ disease.symptoms }}</p>
+      </div>
+
+      <div class="dcard-section">
+        <div class="dcard-section-title"><i class="fa-solid fa-syringe"></i> Treatment</div>
+        <ol class="dcard-treatment">
+          {% for step in disease.treatment[:2] %}
+          <li>{{ step }}</li>
+          {% endfor %}
+          {% if disease.treatment|length > 2 %}
+          <li class="dcard-more-toggle" onclick="toggleMore(this)">
+            <i class="fa-solid fa-chevron-down"></i>
+            {{ disease.treatment|length - 2 }} more steps
+          </li>
+          <div class="dcard-more-content" style="display:none;">
+            {% for step in disease.treatment[2:] %}
+            <li>{{ step }}</li>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </ol>
+      </div>
+    </div>
+
+  </div>
+  {% endfor %}
+</div>
+
+{% if not diseases %}
+<div class="empty-lib-state">
+  <i class="fa-solid fa-magnifying-glass-minus"></i>
+  <h3>No results found</h3>
+  <a href="{{ url_for('diseases') }}" class="btn-ghost-small">Clear Filter</a>
+</div>
+{% endif %}
+
+<div class="no-search-results" id="no-search" style="display:none;">
+  <i class="fa-solid fa-magnifying-glass-minus"></i>
+  <h3>No diseases match your search</h3>
+  <p>Try a different keyword</p>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function toggleMore(el) {
+  const more = el.nextElementSibling;
+  const open = more.style.display === 'none';
+  more.style.display = open ? 'block' : 'none';
+  el.innerHTML = open
+    ? '<i class="fa-solid fa-chevron-up"></i> Show less'
+    : `<i class="fa-solid fa-chevron-down"></i> ${more.querySelectorAll('li').length} more steps`;
+}
+
+// Client-side search
+const searchInput = document.getElementById('disease-search');
+const cards = document.querySelectorAll('.dcard');
+const noResults = document.getElementById('no-search');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  let visible = 0;
+  cards.forEach(card => {
+    const match = !q || card.dataset.search.replace(/-/g, ' ').includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  noResults.style.display = (visible === 0 && q) ? 'flex' : 'none';
+});
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CropGuard AI{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="{{ url_for('home') }}" class="nav-brand">
+        <div class="brand-icon"><i class="fa-solid fa-seedling"></i></div>
+        <span class="brand-text">CropGuard <em>AI</em></span>
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}nav-link--active{% endif %}"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="{{ url_for('detect') }}" class="nav-link {% if request.endpoint == 'detect' %}nav-link--active{% endif %}"><i class="fa-solid fa-microscope"></i> Detect</a></li>
+        <li><a href="{{ url_for('diseases') }}" class="nav-link {% if request.endpoint == 'diseases' %}nav-link--active{% endif %}"><i class="fa-solid fa-book-open"></i> Library</a></li>
+        <li><a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}nav-link--active{% endif %}"><i class="fa-solid fa-circle-info"></i> About</a></li>
+        <li><a href="{{ url_for('detect') }}" class="btn-nav-cta"><i class="fa-solid fa-bolt"></i> Try Now</a></li>
+      </ul>
+      <button class="nav-burger" id="nav-burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-inner">
+      <a href="{{ url_for('home') }}" class="drawer-link {% if request.endpoint == 'home' %}active{% endif %}"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="{{ url_for('detect') }}" class="drawer-link {% if request.endpoint == 'detect' %}active{% endif %}"><i class="fa-solid fa-microscope"></i> Detect</a>
+      <a href="{{ url_for('diseases') }}" class="drawer-link {% if request.endpoint == 'diseases' %}active{% endif %}"><i class="fa-solid fa-book-open"></i> Library</a>
+      <a href="{{ url_for('about') }}" class="drawer-link {% if request.endpoint == 'about' %}active{% endif %}"><i class="fa-solid fa-circle-info"></i> About</a>
+      <a href="{{ url_for('detect') }}" class="btn-nav-cta drawer-cta"><i class="fa-solid fa-bolt"></i> Try Now</a>
+    </div>
+  </div>
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <main class="main-wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="brand-icon brand-icon--sm"><i class="fa-solid fa-seedling"></i></div>
+        <span>CropGuard <em>AI</em></span>
+      </div>
+      <p class="footer-copy">© 2025 CropGuard AI — MobileNetV2 + ResNet50V2 Ensemble · PlantVillage Dataset</p>
+      <div class="footer-links">
+        <a href="{{ url_for('detect') }}">Detect</a>
+        <a href="{{ url_for('diseases') }}">Library</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('about') }}">API</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
